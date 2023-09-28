@@ -1,0 +1,121 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: e9def1d131404c4e92fe790ad6c6a4cd
+      template: 'Template Software Raid MD'
+      name: 'Template Software Raid MD'
+      description: 'Monitoring of MD Soft RAID'
+      groups:
+        - name: Templates
+      discovery_rules:
+        - uuid: 16ab9511c040454a81ea45a34e4f72eb
+          name: 'MD Discovery'
+          key: 'raid.md[discover]'
+          delay: 12h
+          lifetime: 7d
+          item_prototypes:
+            - uuid: 1dff59556cb0437eafbadeceaad7f101
+              name: 'Software Raid {#MD_DEV} Active devices'
+              key: 'raid.md[active,{#MD_DEV}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              units: disks
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: 39f66f020eeb46699d82c871db58004a
+              name: 'Software Raid {#MD_DEV} Devices'
+              key: 'raid.md[devs,{#MD_DEV}]'
+              delay: 1d
+              history: 1w
+              trends: '0'
+              units: disks
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: e155f04aceed4d3da04a28b6742c5e76
+              name: 'Software Raid {#MD_DEV} Failed devices'
+              key: 'raid.md[failed,{#MD_DEV}]'
+              delay: 10m
+              history: 1w
+              trends: '0'
+              units: disks
+              tags:
+                - tag: Application
+                  value: MD
+              trigger_prototypes:
+                - uuid: 967e01585e8640e7bfb970fd070295cb
+                  expression: 'last(/Template Software Raid MD/raid.md[failed,{#MD_DEV}])>0'
+                  name: 'Software RAID ''{#MD_DEV}'' has FAILED disks'
+                  priority: HIGH
+            - uuid: d8daff4b502c421aaa8794fd0341bed4
+              name: 'Software Raid {#MD_DEV} Array level'
+              key: 'raid.md[level,{#MD_DEV}]'
+              delay: 1d
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: f081e8bb24bd44e1b6b3ef1890418334
+              name: 'Software Raid {#MD_DEV} Resync status'
+              key: 'raid.md[resync,{#MD_DEV}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: c31d378552f1483c99f5aaf47f1a5666
+              name: 'Software Raid {#MD_DEV} Array size'
+              key: 'raid.md[size,{#MD_DEV}]'
+              delay: 1d
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: 454e896296cc423698b9e90d5bb63914
+              name: 'Software Raid {#MD_DEV} Spare devices'
+              key: 'raid.md[spare,{#MD_DEV}]'
+              delay: 1d
+              history: 1w
+              trends: '0'
+              units: disks
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: 7ffdbc1c5a894991a997ed8c616bbde8
+              name: 'Software Raid {#MD_DEV} Status'
+              key: 'raid.md[status,{#MD_DEV}]'
+              delay: 10m
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              request_method: POST
+              tags:
+                - tag: Application
+                  value: MD
+            - uuid: 7308161240f44131af94a2f0f799581f
+              name: 'Software Raid {#MD_DEV} Array update-time'
+              key: 'raid.md[updated,{#MD_DEV}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: MD
+          trigger_prototypes:
+            - uuid: c3e9afd8eafb44018ff49095e680c5d3
+              expression: 'last(/Template Software Raid MD/raid.md[active,{#MD_DEV}])<last(/Template Software Raid MD/raid.md[devs,{#MD_DEV}])'
+              name: 'Software RAID ''{#MD_DEV}'' disks are missing'
+              priority: AVERAGE
+          request_method: POST
